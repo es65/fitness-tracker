@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 sampling_rate = 100  # Samples per second
 t = np.linspace(0, 1, sampling_rate, endpoint=False)
 # Create a signal with two frequencies: 5 Hz (low) and 50 Hz (high)
-signal = np.sin(2 * np.pi * 5 * t) + 0.5 * np.sin(2 * np.pi * 50 * t)
+signal = np.sin(2 * np.pi * 5 * t) + 0.3 * np.sin(2 * np.pi * 40 * t)
 
 # Create a DataFrame
 df = pd.DataFrame({'time': t, 'signal': signal})
