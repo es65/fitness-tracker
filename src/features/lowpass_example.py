@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 # Sample time series data creation (replace this with your actual DataFrame and column)
 # For example, a signal with a mixture of low and high frequency components
-sampling_rate = 100  # Samples per second
+sampling_rate = 200  # Samples per second
 t = np.linspace(0, 1, sampling_rate, endpoint=False)
 # Create a signal with two frequencies: 5 Hz (low) and 50 Hz (high)
 signal = np.sin(2 * np.pi * 5 * t) + 0.3 * np.sin(2 * np.pi * 40 * t)
