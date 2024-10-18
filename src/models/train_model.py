@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, LeaveOneGroupOut
 import matplotlib.pyplot as plt
 from LearningAlgorithms import ClassificationAlgorithms
 import seaborn as sns
@@ -293,13 +293,89 @@ print(report)
 # --------------------------------------------------------------
 # Select train and test data based on participant
 # --------------------------------------------------------------
+df_participant = df.drop(['category', 'set'], axis=1)
 
+participants = df_participant['participant'].unique()
+participants.sort()
+
+X_train = df_participant[df_participant['participant'] != 'A'].drop('label', axis=1)
+X_test = df_participant[df_participant['participant'] == 'A'].drop('label', axis=1)
+y_train = df_participant[df_participant['participant'] != 'A']['label']
+y_test = df_participant[df_participant['participant'] == 'A']['label']
+
+'label' in X_train.columns # Expect False
+'A' in X_train['participant'].values # Expect False
+len(X_train) == len(y_train) # Expect True
+len(X_test) == len(y_test) # Expect True
+
+# Should but did not test label dist in test and training sets
+
+(
+    class_train_y,
+    class_test_y,
+    class_train_prob_y,
+    class_test_prob_y,
+) = learner.random_forest(
+    X_train[selected_features], y_train, X_test[selected_features], gridsearch=True
+)
+
+accuracy_A_rm = accuracy_score(y_test, class_test_y)
+
+report_A_rm = classification_report(y_test, class_test_y)
+
+print(f'Test accuracy for Random Forest with participant A removed: {accuracy_A_rm}')
+print('\nClassification Report for participant A removed:\n')
+print(report)
+
+###
+
+# Leave-One-Group-Out Cross-Validation (LOGO-CV) using participant
+# Avoids data leakage where data from the same participant exercise ends up
+# DE only did a single instance using participant A
+# in both training and test data
+# I implemented manually but can also use sklearn LeaveOneGroupOut()
+
+LOGO_accuracies = {}
+LOGO_reports = {}
+
+for p in participants:
+    
+    X_train = df_participant[df_participant['participant'] != p].drop('label', axis=1)
+    X_test = df_participant[df_participant['participant'] == p].drop('label', axis=1)
+    y_train = df_participant[df_participant['participant'] != p]['label']
+    y_test = df_participant[df_participant['participant'] == p]['label']
+
+    (
+        class_train_y,
+        class_test_y,
+        class_train_prob_y,
+        class_test_prob_y,
+    ) = learner.random_forest(
+        X_train[selected_features], y_train, X_test[selected_features], gridsearch=True
+    )
+
+    LOGO_accuracies[p] = a = accuracy_score(y_test, class_test_y)
+
+    LOGO_reports[p] = report = classification_report(y_test, class_test_y)
+
+    print(f'\nTest accuracy for Random Forest with participant {p} removed: {a}')
+    print(f'\nClassification Report for participant {p} removed:\n')
+    print(report)
 
 # --------------------------------------------------------------
 # Use best model again and evaluate results
 # --------------------------------------------------------------
-
+ 
+ # Above
 
 # --------------------------------------------------------------
 # Try a simpler model with the selected features
 # --------------------------------------------------------------
+
+# Skipped
+
+################################################################
+
+# To implement:
+# Save and export model
+# Inspect and visualize model
