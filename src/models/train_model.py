@@ -375,10 +375,4 @@ for p in participants:
 
 # Skipped
 
-# --------------------------------------------------------------
-# Visualize Trees
-# --------------------------------------------------------------
 
-# To implement:
-# Save and export model
-# Inspect and visualize model

@@ -62,6 +62,7 @@ conf_matrices = []
 
 # Perform LOGO-CV
 for train_idx, test_idx in logo.split(X, y, groups=groups):
+    
     X_train, X_test = X.iloc[train_idx], X.iloc[test_idx]
     y_train, y_test = y.iloc[train_idx], y.iloc[test_idx]
     
@@ -128,3 +129,20 @@ graph = graphviz.Source(tree_dot)
 graph.render('../../reports/figures/tree_gv3')  # This will save as a PDF or PNG file
 
 len(clf.estimators_)
+
+for train_idx, test_idx in logo.split(X, y, groups=groups):
+    
+    X_train, X_test = X.iloc[train_idx], X.iloc[test_idx]
+    y_train, y_test = y.iloc[train_idx], y.iloc[test_idx]
+    
+    print(f'Participants in test data: {df.iloc[test_idx]['participant'].unique()}')
+    
+    print(f'Shape X Train: {X_train.shape}')
+    print(f'Shape X Train: {X_test.shape}')
+    print(f'Shape X Train: {y_train.shape}')
+    print(f'Shape X Train: {y_test.shape}')
+    
+    print(f'Exercises y test: {y_test.unique()}')
+
+
+df[df['participant'] == 'B']['label'].unique()
